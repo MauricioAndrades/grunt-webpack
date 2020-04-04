@@ -118,7 +118,10 @@ npm install --save-dev webpack-dev-server
 
         if (opts.inline && (opts.hotOnly || opts.hot)) {
           webpackOptions.plugins = webpackOptions.plugins || [];
-          webpackOptions.plugins.push(new webpack.HotModuleReplacementPlugin());
+          // prevent duplicate hot entries from being added
+          if (!webpackOptions.plugins.some(plugin => plugin.constructor.name === "HotModuleReplacementPlugin")) {
+            webpackOptions.plugins.push(new webpack.HotModuleReplacementPlugin());
+          }
         }
 
         const compiler = webpack(webpackOptions);
